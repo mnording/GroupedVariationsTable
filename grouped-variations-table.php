@@ -13,3 +13,208 @@ Domain Path:  /languages
 */
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+require 'grouped-variations-table-settings.php';
+/**
+ * Check if WooCommerce is active
+ **/
+if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+    add_action( 'admin_init', 'myplugin_register_settings' );
+    add_action('woocommerce_before_single_product', 'CheckIfPluginShouldLoad', 10);
+    add_action('wp_enqueue_scripts', 'wpb_adding_styles');
+}
+
+function CheckIfPluginShouldLoad()
+{
+    global $woocommerce, $product, $post;
+    if ($product->is_type('variable')) {
+
+       // Product is a variable Product, then this might be ok to load
+        $attrMasterSorter = get_option('myplugin_option_name'); // Get the master grouper to see if this variation uses it
+
+        $loadPlugin = false;
+        $available_product_variations = $product->get_available_variations();
+        //Go through the products variations, in order to see if it uses the one for grouping
+        foreach($available_product_variations as $prod)
+        {
+           foreach($prod["attributes"] as $key => $attr)
+           {
+
+               if($key === $attrMasterSorter)
+               {
+                   // we found it!
+                   $loadPlugin = true;
+               }
+           }
+        }
+        if($loadPlugin) // Basicly, if its a variable prod and if it uses the attribute used for master grouping
+        {
+            add_action('woocommerce_after_single_product_summary', 'renderTable', 1);
+            add_filter( 'woocommerce_locate_template', 'reordertemplateloading', 1, 3 );
+        }
+    }
+}
+
+
+
+
+
+    function wpb_adding_styles() {
+
+        wp_register_style('grouped-variations-table', plugins_url('css/main.css', __FILE__));
+        if ( function_exists( 'is_woocommerce' ) ) {
+            if (  is_woocommerce() &&  is_product() ) {
+                wp_enqueue_style('grouped-variations-table');
+            }
+        }
+
+    }
+function reordertemplateloading( $template, $template_name, $template_path ) {
+    global $woocommerce;
+    $_template = $template;
+    if ( ! $template_path )
+        $template_path = $woocommerce->template_url;
+
+    $plugin_path  = untrailingslashit( plugin_dir_path( __FILE__ ) )  . '/woocommerce/';
+
+    // Look within passed path within the theme - this is priority
+    $template = locate_template(
+        array(
+            $template_path . $template_name,
+            $template_name
+        )
+    );
+
+    if( ! $template && file_exists( $plugin_path . $template_name ) )
+        $template = $plugin_path . $template_name;
+
+    if ( ! $template )
+        $template = $_template;
+
+    return $template;
+}
+
+    function renderTable()
+    {
+    global $woocommerce, $product, $post;
+// test if product is variable
+        $attrMasterSorter = get_option('myplugin_option_name');
+
+    if ($product->is_type( 'variable' ))
+    {
+        $available_product_variations = $product->get_available_variations();
+
+        $terms = get_terms(trim ($attrMasterSorter,"attribute_"));
+        $sorting = array();
+        foreach($terms as $term)
+        {
+            $sorting[] = array(
+                "attribute" => $term->slug,
+                "name" => $term->name);
+        }
+
+        $tablearray = array();
+        foreach($sorting as $attr)
+        {
+
+            $tablearray[$attr["attribute"]] = array();
+            foreach ($available_product_variations as $value) {
+
+
+                if($value["attributes"][$attrMasterSorter] === $attr["attribute"])
+                {
+                    $tablearray[$attr["attribute"]][] = array("name" => $attr["name"], "data" => $value);
+                }
+            }
+        }
+        CreateOutput($tablearray);
+    }
+
+}
+    function attribute_slug_to_title( $attribute ,$slug ) {
+        global $woocommerce;
+        if ( taxonomy_exists( esc_attr( str_replace( 'attribute_', '', $attribute ) ) ) ) {
+            $term = get_term_by( 'slug', $slug, esc_attr( str_replace( 'attribute_', '', $attribute ) ) );
+            if ( ! is_wp_error( $term ) && $term->name )
+                $value = $term->name;
+        } else {
+            $value = apply_filters( 'woocommerce_variation_option_name', $value );
+        }
+        return $value;
+    }
+
+function CreateOutput($tablearray)
+{
+
+    global $product;
+    echo "<div class='grouped-variation-table-container'>";
+    foreach($tablearray as $grouping=>$tabledata)
+    {
+
+        echo "<table class='grouped-variation-table'>";
+        echo "<caption>".$tabledata[0]["name"]."</caption>";
+        echo "<thead>";
+        foreach(GetTableHeaders($grouping) as $key){
+            echo "<th>";
+            echo $key;
+            echo "</th>";
+        }
+        echo "<th>";
+        echo "Price";
+        echo "</th>";
+        echo "<th>";
+        echo "</th>";
+        echo "</thead>";
+        echo "<tbody>";
+
+        foreach($tabledata as $data)
+        {
+            echo "<tr>";
+            foreach(GetAttributesWithoutMainGrouped($data["data"]["attributes"],$grouping) as $attr)
+            {
+                echo "<td>";
+                echo $attr;
+                echo "</td>";
+            }
+            echo "<td>";
+            echo $data["data"]["price_html"];
+            echo "</td>";
+            echo "<td>";
+            echo "<a href='?add-to-cart=".$product->get_id()."&variation_id=".$data["data"]["variation_id"]."&".http_build_query($data["data"]["attributes"])."'>Add to cart</a>";
+            echo "</td>";
+            echo "</tr>";
+
+
+        }
+        echo "</tbody>";
+        echo  "</table>";
+    }
+    echo "</div>";
+}
+function GetTableHeaders($exclude)
+{
+    global $product;
+    $headers = array();
+    foreach($product->get_variation_attributes() as $key => $attr){
+
+        if(in_array($exclude,$attr))
+        {
+            continue;
+        }
+        $terms = get_taxonomies(array("name"=>$key),"objects");
+        $headers[] = $terms[$key]->labels->singular_name;
+    }
+    return  $headers;
+}
+function GetAttributesWithoutMainGrouped($attributes,$exclude)
+{   $attributesClean = array();
+    foreach($attributes as $attr)
+    {
+        if($attr ===  $exclude)
+        {
+            continue;
+        }
+        $attributesClean[] =  $attr;
+    }
+    return  $attributesClean;
+
+}
