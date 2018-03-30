@@ -35,17 +35,18 @@ class GroupedVariationsTable
         if ($product->is_type('variable')) {
 
             // Product is a variable Product, then this might be ok to load
-            $attrMasterSorter = get_option('myplugin_option_name'); // Get the master grouper to see if this variation uses it
+            $this->attrMasterSorter = get_option('myplugin_option_name'); // Get the master grouper to see if this variation uses it
 
             $loadPlugin = false;
-            $available_product_variations = $product->get_available_variations();
+            $this->available_product_variations =  $product->get_available_variations();
+
             //Go through the products variations, in order to see if it uses the one for grouping
-            foreach($available_product_variations as $prod)
+            foreach($this->available_product_variations as $prod)
             {
                 foreach($prod["attributes"] as $key => $attr)
                 {
 
-                    if($key === $attrMasterSorter)
+                    if($key === $this->attrMasterSorter)
                     {
                         // we found it!
                         $loadPlugin = true;
@@ -103,13 +104,13 @@ class GroupedVariationsTable
     {
         global $woocommerce, $product, $post;
 // test if product is variable
-        $attrMasterSorter = get_option('myplugin_option_name');
+        
 
         if ($product->is_type( 'variable' ))
         {
-            $available_product_variations = $product->get_available_variations();
 
-            $terms = get_terms(trim ($attrMasterSorter,"attribute_"));
+
+            $terms = get_terms(trim ($this->attrMasterSorter,"attribute_"));
             $sorting = array();
             foreach($terms as $term)
             {
@@ -123,10 +124,10 @@ class GroupedVariationsTable
             {
 
                 $tablearray[$attr["attribute"]] = array();
-                foreach ($available_product_variations as $value) {
+                foreach ($this->available_product_variations as $value) {
 
 
-                    if($value["attributes"][$attrMasterSorter] === $attr["attribute"])
+                    if($value["attributes"][$this->attrMasterSorter] === $attr["attribute"])
                     {
                         $tablearray[$attr["attribute"]][] = array("name" => $attr["name"], "data" => $value);
                     }
