@@ -17,42 +17,48 @@ require 'grouped-variations-table-settings.php';
 /**
  * Check if WooCommerce is active
  **/
-if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
-    add_action( 'admin_init', 'myplugin_register_settings' );
-    add_action('woocommerce_before_single_product', 'CheckIfPluginShouldLoad', 10);
-    add_action('wp_enqueue_scripts', 'wpb_adding_styles');
-}
-
-function CheckIfPluginShouldLoad()
+class GroupedVariationsTable
 {
-    global $woocommerce, $product, $post;
-    if ($product->is_type('variable')) {
-
-       // Product is a variable Product, then this might be ok to load
-        $attrMasterSorter = get_option('myplugin_option_name'); // Get the master grouper to see if this variation uses it
-
-        $loadPlugin = false;
-        $available_product_variations = $product->get_available_variations();
-        //Go through the products variations, in order to see if it uses the one for grouping
-        foreach($available_product_variations as $prod)
-        {
-           foreach($prod["attributes"] as $key => $attr)
-           {
-
-               if($key === $attrMasterSorter)
-               {
-                   // we found it!
-                   $loadPlugin = true;
-               }
-           }
-        }
-        if($loadPlugin) // Basicly, if its a variable prod and if it uses the attribute used for master grouping
-        {
-            add_action('woocommerce_after_single_product_summary', 'renderTable', 1);
-            add_filter( 'woocommerce_locate_template', 'reordertemplateloading', 1, 3 );
+    public function __construct()
+    {
+        if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+            add_action( 'admin_init', array($this,'myplugin_register_settings' ));
+            add_action('woocommerce_before_single_product', array($this,'CheckIfPluginShouldLoad'), 10);
+            add_action('wp_enqueue_scripts', array($this,'wpb_adding_styles'));
         }
     }
-}
+
+
+    function CheckIfPluginShouldLoad()
+    {
+        global $woocommerce, $product, $post;
+        if ($product->is_type('variable')) {
+
+            // Product is a variable Product, then this might be ok to load
+            $attrMasterSorter = get_option('myplugin_option_name'); // Get the master grouper to see if this variation uses it
+
+            $loadPlugin = false;
+            $available_product_variations = $product->get_available_variations();
+            //Go through the products variations, in order to see if it uses the one for grouping
+            foreach($available_product_variations as $prod)
+            {
+                foreach($prod["attributes"] as $key => $attr)
+                {
+
+                    if($key === $attrMasterSorter)
+                    {
+                        // we found it!
+                        $loadPlugin = true;
+                    }
+                }
+            }
+            if($loadPlugin) // Basicly, if its a variable prod and if it uses the attribute used for master grouping
+            {
+                add_action('woocommerce_after_single_product_summary', array($this,'renderTable'), 1);
+                add_filter( 'woocommerce_locate_template', array($this,'reordertemplateloading'), 1, 3 );
+            }
+        }
+    }
 
 
 
@@ -68,68 +74,68 @@ function CheckIfPluginShouldLoad()
         }
 
     }
-function reordertemplateloading( $template, $template_name, $template_path ) {
-    global $woocommerce;
-    $_template = $template;
-    if ( ! $template_path )
-        $template_path = $woocommerce->template_url;
+    function reordertemplateloading( $template, $template_name, $template_path ) {
+        global $woocommerce;
+        $_template = $template;
+        if ( ! $template_path )
+            $template_path = $woocommerce->template_url;
 
-    $plugin_path  = untrailingslashit( plugin_dir_path( __FILE__ ) )  . '/woocommerce/';
+        $plugin_path  = untrailingslashit( plugin_dir_path( __FILE__ ) )  . '/woocommerce/';
 
-    // Look within passed path within the theme - this is priority
-    $template = locate_template(
-        array(
-            $template_path . $template_name,
-            $template_name
-        )
-    );
+        // Look within passed path within the theme - this is priority
+        $template = locate_template(
+            array(
+                $template_path . $template_name,
+                $template_name
+            )
+        );
 
-    if( ! $template && file_exists( $plugin_path . $template_name ) )
-        $template = $plugin_path . $template_name;
+        if( ! $template && file_exists( $plugin_path . $template_name ) )
+            $template = $plugin_path . $template_name;
 
-    if ( ! $template )
-        $template = $_template;
+        if ( ! $template )
+            $template = $_template;
 
-    return $template;
-}
+        return $template;
+    }
 
     function renderTable()
     {
-    global $woocommerce, $product, $post;
+        global $woocommerce, $product, $post;
 // test if product is variable
         $attrMasterSorter = get_option('myplugin_option_name');
 
-    if ($product->is_type( 'variable' ))
-    {
-        $available_product_variations = $product->get_available_variations();
-
-        $terms = get_terms(trim ($attrMasterSorter,"attribute_"));
-        $sorting = array();
-        foreach($terms as $term)
+        if ($product->is_type( 'variable' ))
         {
-            $sorting[] = array(
-                "attribute" => $term->slug,
-                "name" => $term->name);
-        }
+            $available_product_variations = $product->get_available_variations();
 
-        $tablearray = array();
-        foreach($sorting as $attr)
-        {
+            $terms = get_terms(trim ($attrMasterSorter,"attribute_"));
+            $sorting = array();
+            foreach($terms as $term)
+            {
+                $sorting[] = array(
+                    "attribute" => $term->slug,
+                    "name" => $term->name);
+            }
 
-            $tablearray[$attr["attribute"]] = array();
-            foreach ($available_product_variations as $value) {
+            $tablearray = array();
+            foreach($sorting as $attr)
+            {
+
+                $tablearray[$attr["attribute"]] = array();
+                foreach ($available_product_variations as $value) {
 
 
-                if($value["attributes"][$attrMasterSorter] === $attr["attribute"])
-                {
-                    $tablearray[$attr["attribute"]][] = array("name" => $attr["name"], "data" => $value);
+                    if($value["attributes"][$attrMasterSorter] === $attr["attribute"])
+                    {
+                        $tablearray[$attr["attribute"]][] = array("name" => $attr["name"], "data" => $value);
+                    }
                 }
             }
+            $this->CreateOutput($tablearray);
         }
-        CreateOutput($tablearray);
-    }
 
-}
+    }
     function attribute_slug_to_title( $attribute ,$slug ) {
         global $woocommerce;
         if ( taxonomy_exists( esc_attr( str_replace( 'attribute_', '', $attribute ) ) ) ) {
@@ -142,79 +148,85 @@ function reordertemplateloading( $template, $template_name, $template_path ) {
         return $value;
     }
 
-function CreateOutput($tablearray)
-{
-
-    global $product;
-    echo "<div class='grouped-variation-table-container'>";
-    foreach($tablearray as $grouping=>$tabledata)
+    function CreateOutput($tablearray)
     {
 
-        echo "<table class='grouped-variation-table'>";
-        echo "<caption>".$tabledata[0]["name"]."</caption>";
-        echo "<thead>";
-        foreach(GetTableHeaders($grouping) as $key){
-            echo "<th>";
-            echo $key;
-            echo "</th>";
-        }
-        echo "<th>";
-        echo "Price";
-        echo "</th>";
-        echo "<th>";
-        echo "</th>";
-        echo "</thead>";
-        echo "<tbody>";
-
-        foreach($tabledata as $data)
+        global $product;
+        echo "<div class='grouped-variation-table-container'>";
+        foreach($tablearray as $grouping=>$tabledata)
         {
-            echo "<tr>";
-            foreach(GetAttributesWithoutMainGrouped($data["data"]["attributes"],$grouping) as $attr)
-            {
-                echo "<td>";
-                echo $attr;
-                echo "</td>";
+
+            echo "<table class='grouped-variation-table'>";
+            echo "<caption>".$tabledata[0]["name"]."</caption>";
+            echo "<thead>";
+            foreach($this->GetTableHeaders($grouping) as $key){
+                echo "<th>";
+                echo $key;
+                echo "</th>";
             }
-            echo "<td>";
-            echo $data["data"]["price_html"];
-            echo "</td>";
-            echo "<td>";
-            echo "<a href='?add-to-cart=".$product->get_id()."&variation_id=".$data["data"]["variation_id"]."&".http_build_query($data["data"]["attributes"])."'>Add to cart</a>";
-            echo "</td>";
-            echo "</tr>";
+            echo "<th>";
+            echo "Price";
+            echo "</th>";
+            echo "<th>";
+            echo "</th>";
+            echo "</thead>";
+            echo "<tbody>";
+
+            foreach($tabledata as $data)
+            {
+                echo "<tr>";
+                foreach($this->GetAttributesWithoutMainGrouped($data["data"]["attributes"],$grouping) as $attr)
+                {
+                    echo "<td>";
+                    echo $attr;
+                    echo "</td>";
+                }
+                echo "<td>";
+                echo $data["data"]["price_html"];
+                echo "</td>";
+                echo "<td>";
+                echo "<a href='?add-to-cart=".$product->get_id()."&variation_id=".$data["data"]["variation_id"]."&".http_build_query($data["data"]["attributes"])."'>Add to cart</a>";
+                echo "</td>";
+                echo "</tr>";
 
 
+            }
+            echo "</tbody>";
+            echo  "</table>";
         }
-        echo "</tbody>";
-        echo  "</table>";
+        echo "</div>";
     }
-    echo "</div>";
-}
-function GetTableHeaders($exclude)
-{
-    global $product;
-    $headers = array();
-    foreach($product->get_variation_attributes() as $key => $attr){
-
-        if(in_array($exclude,$attr))
-        {
-            continue;
-        }
-        $terms = get_taxonomies(array("name"=>$key),"objects");
-        $headers[] = $terms[$key]->labels->singular_name;
-    }
-    return  $headers;
-}
-function GetAttributesWithoutMainGrouped($attributes,$exclude)
-{   $attributesClean = array();
-    foreach($attributes as $attr)
+    function GetTableHeaders($exclude)
     {
-        if($attr ===  $exclude)
-        {
-            continue;
+        global $product;
+        $headers = array();
+        foreach($product->get_variation_attributes() as $key => $attr){
+
+            if(in_array($exclude,$attr))
+            {
+                continue;
+            }
+            $terms = get_taxonomies(array("name"=>$key),"objects");
+            $headers[] = $terms[$key]->labels->singular_name;
         }
-        $attributesClean[] =  $attr;
+        return  $headers;
     }
-    return  $attributesClean;
+    function GetAttributesWithoutMainGrouped($attributes,$exclude)
+    {   $attributesClean = array();
+        foreach($attributes as $attr)
+        {
+            if($attr ===  $exclude)
+            {
+                continue;
+            }
+            $attributesClean[] =  $attr;
+        }
+        return  $attributesClean;
+
+    }
 
 }
+
+
+
+$GLOBALS['GroupedVariationsTable'] = new GroupedVariationsTable();
