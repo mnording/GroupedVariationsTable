@@ -22,7 +22,7 @@ class GroupedVariationsTable
     public function __construct()
     {
         if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
-            add_action( 'admin_init', array($this,'myplugin_register_settings' ));
+            add_action( 'admin_init', 'myplugin_register_settings' );
             add_action('woocommerce_before_single_product', array($this,'CheckIfPluginShouldLoad'), 10);
             add_action('wp_enqueue_scripts', array($this,'wpb_adding_styles'));
         }
@@ -104,7 +104,7 @@ class GroupedVariationsTable
     {
         global $woocommerce, $product, $post;
 // test if product is variable
-        
+
 
         if ($product->is_type( 'variable' ))
         {
@@ -166,7 +166,7 @@ class GroupedVariationsTable
                 echo "</th>";
             }
             echo "<th>";
-            echo "Price";
+            echo _e("Price","groupedvartable");
             echo "</th>";
             echo "<th>";
             echo "</th>";
@@ -186,7 +186,7 @@ class GroupedVariationsTable
                 echo $data["data"]["price_html"];
                 echo "</td>";
                 echo "<td>";
-                echo "<a href='?add-to-cart=".$product->get_id()."&variation_id=".$data["data"]["variation_id"]."&".http_build_query($data["data"]["attributes"])."'>Add to cart</a>";
+                echo "<a href='?add-to-cart=".$product->get_id()."&variation_id=".$data["data"]["variation_id"]."&".http_build_query($data["data"]["attributes"])."'>"._e("Add to cart","groupedvartable")."</a>";
                 echo "</td>";
                 echo "</tr>";
 

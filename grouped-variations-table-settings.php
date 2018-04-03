@@ -17,13 +17,14 @@ function myplugin_register_options_page() {
 add_action('admin_menu', 'myplugin_register_options_page');
 add_action( 'admin_notices', 'my_error_notice' );
 
+
 function my_error_notice()
 {
     if(count(wc_get_attribute_taxonomies()) === 0)
     { ?>
         <div class="notice notice-warning is-dismissable">
-            <p>You have no attributes configured for your shop!</p>
-            <button type="button" class="notice-dismiss"><span class="screen-reader-text">Förkasta detta meddelande.</span></button>
+            <p><?php _e("You have no attributes configured for your shop!","groupedvartable")?></p>
+            <button type="button" class="notice-dismiss"><span class="screen-reader-text"><?php _e("Close this message.","groupedvartable")?></span></button>
         </div>
     <?php }
 }
@@ -35,10 +36,10 @@ function myplugin_options_page()
         <h2>Grouped Variations Table</h2>
         <form method="post" action="options.php">
             <?php settings_fields( 'myplugin_options_group' ); ?>
-            <h3>Select Main Attribute for grouping</h3>
+            <h3><?php _e("Select Main Attribute for grouping","groupedvartable") ?></h3>
             <table style="width:50%">
                 <tr valign="top">
-                    <th scope="row"><label for="myplugin_option_name">Main Attribute for sorting:</label></th>
+                    <th scope="row"><label for="myplugin_option_name"><?php _e("Main Attribute for sorting:","groupedvartable")?></label></th>
                     <td><select id="myplugin_option_name"  name="myplugin_option_name">
                             <?php foreach(wc_get_attribute_taxonomies() as $attr)
                                 {
