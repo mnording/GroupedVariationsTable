@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Grouped Variations Table\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-03 10:56+0000\n"
-"PO-Revision-Date: 2018-04-03 10:58+0000\n"
+"POT-Creation-Date: 2018-04-03 19:11+0000\n"
+"PO-Revision-Date: 2018-04-03 19:15+0000\n"
 "Last-Translator: wcplugin <wcplugin@wcplugin.com>\n"
 "Language-Team: Swedish\n"
 "Language: sv_SE\n"
@@ -12,36 +12,68 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/"
-#: grouped-variations-table.php:189
+
+#: grouped-variations-table-settings.php:67
+#: groupedvariationstable/grouped-variations-table-settings.php:67
+msgid "1 / 3 Width"
+msgstr ""
+
+#: grouped-variations-table.php:193
+#: groupedvariationstable/grouped-variations-table.php:193
 msgid "Add to cart"
 msgstr "Lägg i kundkorg"
+
 #. Description of the plugin
 msgid "Allowing you to group variations in sleak tables on the product page"
 msgstr ""
+
+#: grouped-variations-table-settings.php:29
+#: groupedvariationstable/grouped-variations-table-settings.php:29
+msgid "Close this message."
+msgstr ""
+
+#: grouped-variations-table-settings.php:65
+#: groupedvariationstable/grouped-variations-table-settings.php:65
+msgid "Full width"
+msgstr ""
+
 #. Name of the plugin
 msgid "Grouped Variations Table"
 msgstr ""
+
+#: grouped-variations-table-settings.php:66
+#: groupedvariationstable/grouped-variations-table-settings.php:66
+msgid "Half width"
+msgstr ""
+
 #. URI of the plugin
 msgid "https://developer.wordpress.org/plugins/the-basics/"
 msgstr ""
+
 #. Author URI of the plugin
 msgid "https://mnording.com/"
 msgstr ""
-#: grouped-variations-table-settings.php:42
+
+#: grouped-variations-table-settings.php:44
+#: groupedvariationstable/grouped-variations-table-settings.php:44
 msgid "Main Attribute for sorting:"
 msgstr "Huvudsortering"
+
 #. Author of the plugin
 msgid "mnording"
 msgstr ""
-#: grouped-variations-table.php:169
+
+#: grouped-variations-table.php:173
+#: groupedvariationstable/grouped-variations-table.php:173
 msgid "Price"
 msgstr "Pris"
-#: grouped-variations-table-settings.php:39
+
+#: grouped-variations-table-settings.php:41
+#: groupedvariationstable/grouped-variations-table-settings.php:41
 msgid "Select Main Attribute for grouping"
 msgstr ""
-#: grouped-variations-table-settings.php:27
-msgid "Stäng detta meddelande."
-msgstr ""
-#: grouped-variations-table-settings.php:26
+
+#: grouped-variations-table-settings.php:28
+#: groupedvariationstable/grouped-variations-table-settings.php:28
 msgid "You have no attributes configured for your shop!"
-msgstr "Du har inte skapat några attributer för din butik!" 
+msgstr "Du har inte skapat några attributer för din butik!"
