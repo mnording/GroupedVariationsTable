@@ -22,12 +22,16 @@ class GroupedVariationsTable
     public function __construct()
     {
         if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
-            add_action( 'admin_init', 'myplugin_register_settings' );
+            add_action( 'admin_init', 'groupedvartable_register_settings' );
             add_action('woocommerce_before_single_product', array($this,'CheckIfPluginShouldLoad'), 10);
             add_action('wp_enqueue_scripts', array($this,'wpb_adding_styles'));
+
+            add_action( 'plugins_loaded', array($this,'groupedvartable_load_plugin_textdomain') );
         }
     }
-
+    function groupedvartable_load_plugin_textdomain() {
+        load_plugin_textdomain( 'groupedvartable', FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
+    }
 
     function CheckIfPluginShouldLoad()
     {
@@ -35,7 +39,7 @@ class GroupedVariationsTable
         if ($product->is_type('variable')) {
 
             // Product is a variable Product, then this might be ok to load
-            $this->attrMasterSorter = get_option('myplugin_option_name'); // Get the master grouper to see if this variation uses it
+            $this->attrMasterSorter = get_option('groupedvartable_option_mainsorter'); // Get the master grouper to see if this variation uses it
 
             $loadPlugin = false;
             $this->available_product_variations =  $product->get_available_variations();
@@ -157,7 +161,7 @@ class GroupedVariationsTable
         foreach($tablearray as $grouping=>$tabledata)
         {
 
-            echo "<table class='grouped-variation-table'>";
+            echo "<table class='grouped-variation-table ".get_option('groupedvartable_option_mainwidth')."'>";
             echo "<caption>".$tabledata[0]["name"]."</caption>";
             echo "<thead>";
             foreach($this->GetTableHeaders($grouping) as $key){
@@ -186,7 +190,7 @@ class GroupedVariationsTable
                 echo $data["data"]["price_html"];
                 echo "</td>";
                 echo "<td>";
-                echo "<a href='?add-to-cart=".$product->get_id()."&variation_id=".$data["data"]["variation_id"]."&".http_build_query($data["data"]["attributes"])."'>"._e("Add to cart","groupedvartable")."</a>";
+                echo "<a href='?add-to-cart=".$product->get_id()."&variation_id=".$data["data"]["variation_id"]."&".http_build_query($data["data"]["attributes"])."'>".__("Add to cart","groupedvartable")."</a>";
                 echo "</td>";
                 echo "</tr>";
 

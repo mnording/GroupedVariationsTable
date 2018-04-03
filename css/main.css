@@ -1,10 +1,22 @@
 .grouped-variation-table{
-    width:45%;
+    border-collapse: separate;
     float:left;
     padding: 0 20px;
+}
+.grouped-variation-table.half {
+    width:48%;
+}
+.grouped-variation-table.third {
+    width:32%;
+
 }
 .grouped-variation-table-container {
     clear: both;
     width:100%;
     float: left;
+}
+.grouped-variation-table caption {
+    text-align:center;
+    font-weight:bold;
+    margin: 0;
 }
