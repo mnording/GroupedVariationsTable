@@ -16,11 +16,11 @@ add_action( 'admin_init', 'groupedvartable_register_settings' );
 function groupedvartable_register_options_page() {
     add_options_page('Grouped Variations Table - Settings', 'Grouped Variations Table', 'manage_options', 'grouped-variations-table', 'myplugin_options_page');
 }
-add_action('admin_menu', 'groupedvartable_register_options_page');
-add_action( 'admin_notices', 'my_error_notice' );
+add_action('admin_menu', 'groupedvartable_options_page');
+add_action( 'admin_notices', 'groupedvartable_error_notice' );
 
 
-function my_error_notice()
+function groupedvartable_error_notice()
 {
     if(count(wc_get_attribute_taxonomies()) === 0)
     { ?>
@@ -31,7 +31,7 @@ function my_error_notice()
     <?php }
 }
 
-function myplugin_options_page()
+function groupedvartable_options_page()
 {
     ?>
     <div>

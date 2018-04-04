@@ -24,7 +24,7 @@ class GroupedVariationsTable
         if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
             add_action( 'admin_init', 'groupedvartable_register_settings' );
             add_action('woocommerce_before_single_product', array($this,'CheckIfPluginShouldLoad'), 10);
-            add_action('wp_enqueue_scripts', array($this,'wpb_adding_styles'));
+            add_action('wp_enqueue_scripts', array($this,'groupedvartable_adding_styles'));
 
             add_action( 'plugins_loaded', array($this,'groupedvartable_load_plugin_textdomain') );
         }
@@ -59,8 +59,8 @@ class GroupedVariationsTable
             }
             if($loadPlugin) // Basicly, if its a variable prod and if it uses the attribute used for master grouping
             {
-                add_action('woocommerce_after_single_product_summary', array($this,'renderTable'), 1);
-                add_filter( 'woocommerce_locate_template', array($this,'reordertemplateloading'), 1, 3 );
+                add_action('woocommerce_after_single_product_summary', array($this,'groupedvartable_renderTable'), 1);
+                add_filter( 'woocommerce_locate_template', array($this,'groupedvartable_reordertemplateloading'), 1, 3 );
             }
         }
     }
@@ -69,7 +69,7 @@ class GroupedVariationsTable
 
 
 
-    function wpb_adding_styles() {
+    function groupedvartable_adding_styles() {
 
         wp_register_style('grouped-variations-table', plugins_url('css/main.css', __FILE__));
         if ( function_exists( 'is_woocommerce' ) ) {
@@ -79,7 +79,7 @@ class GroupedVariationsTable
         }
 
     }
-    function reordertemplateloading( $template, $template_name, $template_path ) {
+    function groupedvartable_reordertemplateloading( $template, $template_name, $template_path ) {
         global $woocommerce;
         $_template = $template;
         if ( ! $template_path )
@@ -104,7 +104,7 @@ class GroupedVariationsTable
         return $template;
     }
 
-    function renderTable()
+    function groupedvartable_renderTable()
     {
         global $woocommerce, $product, $post;
 // test if product is variable
@@ -141,17 +141,7 @@ class GroupedVariationsTable
         }
 
     }
-    function attribute_slug_to_title( $attribute ,$slug ) {
-        global $woocommerce;
-        if ( taxonomy_exists( esc_attr( str_replace( 'attribute_', '', $attribute ) ) ) ) {
-            $term = get_term_by( 'slug', $slug, esc_attr( str_replace( 'attribute_', '', $attribute ) ) );
-            if ( ! is_wp_error( $term ) && $term->name )
-                $value = $term->name;
-        } else {
-            $value = apply_filters( 'woocommerce_variation_option_name', $value );
-        }
-        return $value;
-    }
+
 
     function CreateOutput($tablearray)
     {
