@@ -8,15 +8,15 @@
 function groupedvartable_register_settings() {
     add_option( 'groupedvartable_option_mainsorter', 'This is my option value.');
     add_option( 'groupedvartable_option_mainwidth', 'This is my option value.');
-    register_setting( 'groupedvartable_options_group', 'groupedvartable_option_mainwidth', 'myplugin_callback' );
-    register_setting( 'groupedvartable_options_group', 'groupedvartable_option_mainsorter', 'myplugin_callback' );
+    register_setting( 'groupedvartable_options_group', 'groupedvartable_option_mainwidth', 'groupedvartable_callback' );
+    register_setting( 'groupedvartable_options_group', 'groupedvartable_option_mainsorter', 'groupedvartable_callback' );
 }
 add_action( 'admin_init', 'groupedvartable_register_settings' );
 
 function groupedvartable_register_options_page() {
-    add_options_page('Grouped Variations Table - Settings', 'Grouped Variations Table', 'manage_options', 'grouped-variations-table', 'myplugin_options_page');
+    add_options_page('Grouped Variations Table - Settings', 'Grouped Variations Table', 'manage_options', 'grouped-variations-table', 'groupedvartable_options_page');
 }
-add_action('admin_menu', 'groupedvartable_options_page');
+add_action('admin_menu', 'groupedvartable_register_options_page');
 add_action( 'admin_notices', 'groupedvartable_error_notice' );
 
 
