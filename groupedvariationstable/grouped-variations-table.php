@@ -40,7 +40,6 @@ class GroupedVariationsTable
 
             // Product is a variable Product, then this might be ok to load
             $this->attrMasterSorter = get_option('groupedvartable_option_mainsorter'); // Get the master grouper to see if this variation uses it
-
             $loadPlugin = false;
             $this->available_product_variations =  $product->get_available_variations();
 
@@ -113,9 +112,9 @@ class GroupedVariationsTable
         if ($product->is_type( 'variable' ))
         {
 
-
-            $terms = get_terms(trim ($this->attrMasterSorter,"attribute_"));
+            $terms = get_terms(str_replace("attribute_","",$this->attrMasterSorter));
             $sorting = array();
+
             foreach($terms as $term)
             {
                 $sorting[] = array(
