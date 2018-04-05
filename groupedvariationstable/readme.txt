@@ -6,6 +6,7 @@ Tested up to: 4.9.5
 Requires PHP: 5.6
 Stable tag: trunk
 License: MIT
+Version: 1.0.1
 License URI: https://opensource.org/licenses/MIT
 
 Allowing you to group variations in sleak tables on the product page
