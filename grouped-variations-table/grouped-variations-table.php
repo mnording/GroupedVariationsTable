@@ -3,7 +3,7 @@
 Plugin Name:  Grouped Variations Table
 Plugin URI:   https://developer.wordpress.org/plugins/the-basics/
 Description:  Allowing you to group variations in sleak tables on the product page
-Version:      1.0.1
+Version:      1.0.2
 Author:       mnording
 Author URI:   https://mnording.com/
 License:      MIT
@@ -149,7 +149,7 @@ class GroupedVariationsTable
         echo "<div class='grouped-variation-table-container'>";
         foreach($tablearray as $grouping=>$tabledata)
         {
-
+if(isset($tabledata[0])){
             echo "<table class='grouped-variation-table ".get_option('groupedvartable_option_mainwidth')."'>";
             echo "<caption>".$tabledata[0]["name"]."</caption>";
             echo "<thead>";
@@ -187,6 +187,8 @@ class GroupedVariationsTable
             }
             echo "</tbody>";
             echo  "</table>";
+        }
+
         }
         echo "</div>";
     }
