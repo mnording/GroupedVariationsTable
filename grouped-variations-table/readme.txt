@@ -21,6 +21,7 @@ Upload folder to your wp-content/plugins directory
 Activate through admin panel
 
 == Changelog ==
+1.1.0 - Adding mobile support
 1.0.2 - Bugfix for when a product not uses all terms in a taxonomy
 1.0.1 - Bugfix for attribute slugs
 1.0.0 - Initial release
