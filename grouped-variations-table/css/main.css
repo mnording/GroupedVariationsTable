@@ -20,3 +20,10 @@
     font-weight:bold;
     margin: 0;
 }
+
+@media screen and (max-width: 600px) {
+    .grouped-variation-table {
+        width:100% !important;
+        border-collapse: collapse !important;
+    }
+}
