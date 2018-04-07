@@ -8,7 +8,7 @@ Author:       mnording
 Author URI:   https://mnording.com/
 License:      MIT
 License URI:  https://opensource.org/licenses/MIT
-Text Domain:  groupedvartable
+Text Domain:  grouped-variations-table
 Domain Path:  /languages
 */
 
@@ -30,7 +30,7 @@ class GroupedVariationsTable
         }
     }
     function groupedvartable_load_plugin_textdomain() {
-        load_plugin_textdomain( 'groupedvartable', FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
+        load_plugin_textdomain( 'grouped-variations-table', FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
     }
 
     function CheckIfPluginShouldLoad()
@@ -159,7 +159,7 @@ if(isset($tabledata[0])){
                 echo "</th>";
             }
             echo "<th>";
-            echo _e("Price","groupedvartable");
+            echo _e("Price","grouped-variations-table");
             echo "</th>";
             echo "<th>";
             echo "</th>";
@@ -179,7 +179,7 @@ if(isset($tabledata[0])){
                 echo $data["data"]["price_html"];
                 echo "</td>";
                 echo "<td>";
-                echo "<a href='?add-to-cart=".$product->get_id()."&variation_id=".$data["data"]["variation_id"]."&".http_build_query($data["data"]["attributes"])."'>".__("Add to cart","groupedvartable")."</a>";
+                echo "<a href='?add-to-cart=".$product->get_id()."&variation_id=".$data["data"]["variation_id"]."&".http_build_query($data["data"]["attributes"])."'>".__("Add to cart","grouped-variations-table")."</a>";
                 echo "</td>";
                 echo "</tr>";
 

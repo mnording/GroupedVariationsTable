@@ -25,8 +25,8 @@ function groupedvartable_error_notice()
     if(count(wc_get_attribute_taxonomies()) === 0)
     { ?>
         <div class="notice notice-warning is-dismissable">
-            <p><?php _e("You have no attributes configured for your shop!","groupedvartable")?></p>
-            <button type="button" class="notice-dismiss"><span class="screen-reader-text"><?php _e("Close this message.","groupedvartable")?></span></button>
+            <p><?php _e("You have no attributes configured for your shop!","grouped-variations-table")?></p>
+            <button type="button" class="notice-dismiss"><span class="screen-reader-text"><?php _e("Close this message.","grouped-variations-table")?></span></button>
         </div>
     <?php }
 }
@@ -38,10 +38,10 @@ function groupedvartable_options_page()
         <h2>Grouped Variations Table</h2>
         <form method="post" action="options.php">
             <?php settings_fields( 'groupedvartable_options_group' ); ?>
-            <h3><?php _e("Select Main Attribute for grouping","groupedvartable") ?></h3>
+            <h3><?php _e("Select Main Attribute for grouping","grouped-variations-table") ?></h3>
             <table style="width:50%">
                 <tr valign="top">
-                    <th scope="row"><label for="myplugin_option_name"><?php _e("Main Attribute for sorting:","groupedvartable")?></label></th>
+                    <th scope="row"><label for="myplugin_option_name"><?php _e("Main Attribute for sorting:","grouped-variations-table")?></label></th>
                     <td><select id="groupedvartable_option_mainsorter"  name="groupedvartable_option_mainsorter">
                             <?php foreach(wc_get_attribute_taxonomies() as $attr)
                                 {
@@ -62,9 +62,9 @@ function groupedvartable_options_page()
                     <td>
                         <select id="groupedvartable_option_mainwidth"  name="groupedvartable_option_mainwidth">
                             <?php $selectedvalue = get_option('groupedvartable_option_mainwidth'); var_dump($selectedvalue) ?>
-                            <option <?php echo $selectedvalue=="full"?"selected":""?>  value="full"><?php _e("Full width","groupedvartable");?></option>
-                            <option <?php echo $selectedvalue=="half"?"selected":""?> value="half"><?php _e("Half width","groupedvartable");?></option>
-                            <option <?php echo $selectedvalue=="third"?"selected":""?> value="third"><?php _e("1 / 3 Width","groupedvartable");?></option>
+                            <option <?php echo $selectedvalue=="full"?"selected":""?>  value="full"><?php _e("Full width","grouped-variations-table");?></option>
+                            <option <?php echo $selectedvalue=="half"?"selected":""?> value="half"><?php _e("Half width","grouped-variations-table");?></option>
+                            <option <?php echo $selectedvalue=="third"?"selected":""?> value="third"><?php _e("1 / 3 Width","grouped-variations-table");?></option>
                         </select>
                     </td>
                 </tr>
