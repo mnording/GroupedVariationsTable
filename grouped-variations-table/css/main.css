@@ -27,3 +27,14 @@
         border-collapse: collapse !important;
     }
 }
+
+.grouped-variation-table .button{
+    border: 1px solid black;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding: 7px;
+}
+.grouped-variation-table .button:hover{
+    text-decoration: none;
+}

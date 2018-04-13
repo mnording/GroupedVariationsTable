@@ -8,6 +8,8 @@
 function groupedvartable_register_settings() {
     add_option( 'groupedvartable_option_mainsorter', 'This is my option value.');
     add_option( 'groupedvartable_option_mainwidth', 'This is my option value.');
+    add_option( 'groupedvartable_option_buttonsenabled', 'This is my option value.');
+    register_setting( 'groupedvartable_options_group', 'groupedvartable_option_buttonsenabled', 'groupedvartable_callback' );
     register_setting( 'groupedvartable_options_group', 'groupedvartable_option_mainwidth', 'groupedvartable_callback' );
     register_setting( 'groupedvartable_options_group', 'groupedvartable_option_mainsorter', 'groupedvartable_callback' );
 }
@@ -65,6 +67,15 @@ function groupedvartable_options_page()
                             <option <?php echo $selectedvalue=="full"?"selected":""?>  value="full"><?php _e("Full width","grouped-variations-table");?></option>
                             <option <?php echo $selectedvalue=="half"?"selected":""?> value="half"><?php _e("Half width","grouped-variations-table");?></option>
                             <option <?php echo $selectedvalue=="third"?"selected":""?> value="third"><?php _e("1 / 3 Width","grouped-variations-table");?></option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="groupedvartable_option_buttonsenabled">Link Style</label></th>
+                    <td>
+                        <select id="groupedvartable_option_buttonsenabled" name="groupedvartable_option_buttonsenabled">
+                            <option <?php if(get_option('groupedvartable_option_buttonsenabled') == "link"){ echo "selected";}?> value="link"><?php _e("Link","grouped-variations-table")?></option>
+                            <option <?php if(get_option('groupedvartable_option_buttonsenabled') == "button"){ echo "selected";}?> value="button"><?php _e("Button","grouped-variations-table")?></option>
                         </select>
                     </td>
                 </tr>
