@@ -3,7 +3,7 @@
 Plugin Name:  Grouped Variations Table
 Plugin URI:   https://developer.wordpress.org/plugins/the-basics/
 Description:  Allowing you to group variations in sleak tables on the product page
-Version:      1.3.0
+Version:      1.4.0
 Author:       mnording
 Author URI:   https://mnording.com/
 License:      MIT
@@ -146,6 +146,7 @@ class GroupedVariationsTable
     function CreateOutput($tablearray,$buttons = false)
     {
 
+
         global $product;
         echo "<div class='grouped-variation-table-container'>";
         foreach($tablearray as $grouping=>$tabledata)
@@ -180,9 +181,9 @@ if(isset($tabledata[0])){
                 echo $data["data"]["price_html"];
                 echo "</td>";
                 echo "<td>";
-                echo "<a ";
-                if($buttons) {echo "class='button' "; }
+                echo "<a class='single_add_to_cart_button button alt' ";
                 echo "href='?add-to-cart=".$product->get_id()."&variation_id=".$data["data"]["variation_id"]."&".http_build_query($data["data"]["attributes"])."'>".__("Add to cart","grouped-variations-table")."</a>";
+
                 echo "</td>";
                 echo "</tr>";
 
@@ -193,6 +194,7 @@ if(isset($tabledata[0])){
         }
 
         }
+        do_action( 'woocommerce_after_add_to_cart_button' );
         echo "</div>";
     }
     function GetTableHeaders($exclude)

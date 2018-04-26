@@ -70,15 +70,7 @@ function groupedvartable_options_page()
                         </select>
                     </td>
                 </tr>
-                <tr>
-                    <th scope="row"><label for="groupedvartable_option_buttonsenabled">Link Style</label></th>
-                    <td>
-                        <select id="groupedvartable_option_buttonsenabled" name="groupedvartable_option_buttonsenabled">
-                            <option <?php if(get_option('groupedvartable_option_buttonsenabled') == "link"){ echo "selected";}?> value="link"><?php _e("Link","grouped-variations-table")?></option>
-                            <option <?php if(get_option('groupedvartable_option_buttonsenabled') == "button"){ echo "selected";}?> value="button"><?php _e("Button","grouped-variations-table")?></option>
-                        </select>
-                    </td>
-                </tr>
+
             </table>
             <?php  submit_button(); ?>
         </form>
