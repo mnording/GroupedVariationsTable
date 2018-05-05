@@ -21,6 +21,7 @@ Upload folder to your wp-content/plugins directory
 Activate through admin panel
 
 == Changelog ==
+1.4.1 - Bugfix, missing nofollow on add to cart link.
 1.4.0 - removing link style switcher and supporting Google Analytics for Woocommerce Integration
 1.3.0 - Adding link style switcher
 1.2.0 - Changing text domain to support language packs
