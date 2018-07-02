@@ -181,9 +181,14 @@ if(isset($tabledata[0])){
                 echo $data["data"]["price_html"];
                 echo "</td>";
                 echo "<td>";
-                echo "<a class='single_add_to_cart_button button alt' ";
-                echo "href='?add-to-cart=".$product->get_id()."&variation_id=".$data["data"]["variation_id"]."&".http_build_query($data["data"]["attributes"])."' rel='nofollow'>".__("Add to cart","grouped-variations-table")."</a>";
+                if($data["data"]["is_in_stock"]){
+                    echo "<a class='single_add_to_cart_button button alt' ";
+                    echo "href='?add-to-cart=".$product->get_id()."&variation_id=".$data["data"]["variation_id"]."&".http_build_query($data["data"]["attributes"])."' rel='nofollow'>".__("Add to cart","grouped-variations-table")."</a>";
 
+                }
+                else{
+                    echo "<a class='out-of-stock'>".__("Out of stock","grouped-variations-table")."</a>";
+                }
                 echo "</td>";
                 echo "</tr>";
 
